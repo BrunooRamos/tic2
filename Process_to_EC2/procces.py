@@ -1,8 +1,8 @@
-from database.queries import Queries
+from Database.queries import Queries
 from sqlalchemy.orm import Session
 from statistics import mean
 from datetime import datetime
-from database.models.info import Info
+from Database.models.info import Info
 import requests
 
 class ProcessToEC2:

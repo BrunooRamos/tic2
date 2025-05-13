@@ -1,14 +1,14 @@
 import time
-from count_people import get_people_stream
-from database.models.info import Info
-from database.queries import Queries
-from get_measure import get_random_measure
+from Camara.count_people import get_people_stream
+from Database.models.info import Info
+from Database.queries import Queries
+from Sensor.get_measure import get_random_measure
 
-from SensorScript import read_sensor
+from Sensor.SensorScript import read_sensor
 
 from iot_handler import connect_to_iot_core, subscribe_to_topic, publish_data
-from database.db_handler import DatabaseHandler
-from procces_to_ec2.procces import ProcessToEC2
+from Database.db_handler import DatabaseHandler
+from Process_to_EC2.procces import ProcessToEC2
 
 def main():
     connect_to_iot_core()

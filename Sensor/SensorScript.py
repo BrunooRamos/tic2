@@ -1,3 +1,6 @@
+
+# Este script es exclusivo para las Raspberry Pi, donde usar el paquete board tiene sentido
+
 import board
 import adafruit_dht
 import random
@@ -25,4 +28,4 @@ def read_sensor():
         # En caso que falle al leer el sensor, se imprime el error
         print("Error al leer el sensor DHT11, probar de vuelta o chequear cableado:", e)
 
-# get_measure.py ya se puede borrar porque tenemos las lecturas reales
+
