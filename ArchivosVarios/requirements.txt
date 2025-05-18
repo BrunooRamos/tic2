@@ -1,7 +1,6 @@
 sqlalchemy
 dotenv
 requests
-cv2
 opencv-python
 ultralytics
 awscrt

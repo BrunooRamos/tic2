@@ -1,6 +1,6 @@
 from sqlalchemy import select, update, delete
 from sqlalchemy.orm import Session
-from .models.info import Info   
+from .models.Info import Info   
 
 class Queries:
     """

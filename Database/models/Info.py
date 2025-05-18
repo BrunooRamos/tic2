@@ -1,6 +1,6 @@
 
 from sqlalchemy import Column, Integer, Boolean, TIMESTAMP, func
-from ..db_handler import Base
+from ..DB_handler import Base
 
 class Info(Base):
     __tablename__ = "info"
