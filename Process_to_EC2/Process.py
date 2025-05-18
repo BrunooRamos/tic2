@@ -24,7 +24,7 @@ class ProcessToEC2:
          - signature (base64)
         """
 
-        timestamp = datetime.utcnow().isoformat() + "Z"
+        timestamp = datetime.now().isoformat()
         payload = {
             "raspi_id": 1,
             "timestamp": timestamp,
@@ -33,6 +33,7 @@ class ProcessToEC2:
 
         # Convertir a bytes siempre de la misma forma
         payload_bytes = json.dumps(payload, sort_keys=True).encode("utf-8")
+        
         # Firmar
         sig = Criptografia.sign_payload(payload_bytes)
 
@@ -88,13 +89,13 @@ class ProcessToEC2:
 
         # Crear una nueva entrada con el resumen
         summarized_entry = Info(
-            raspberry_id=raspberry_id,
-            people=avg_people,
-            humidity=avg_humidity,
-            temperature=avg_temperature,
-            co2=avg_co2,
-            timestamp=datetime.now(),
-            processed=True
+            raspberry_id = raspberry_id,
+            people = avg_people,
+            humidity = avg_humidity,
+            temperature = avg_temperature,
+            co2 = avg_co2,
+            timestamp = datetime.now(),
+            processed = True
         )
 
         # Eliminar las entradas originales

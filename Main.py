@@ -43,10 +43,10 @@ def main():
 
         info = Info(
             raspberry_id=1,
-            people=people_count,
-            humidity=medida["humidity"],
-            temperature=medida["temperature"],
-            co2=medida["co2"]
+            people = people_count,
+            humidity = medida["humidity"],
+            temperature = medida["temperature"],
+            co2 = medida["co2"]
         )
         Queries.insert_data(session, info)
 

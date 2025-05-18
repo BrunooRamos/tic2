@@ -56,8 +56,9 @@ def load_private_key():
 
 def load_public_key():
     """
-    Carga la clave pública (por si la necesitás localmente).
+    Carga la clave pública (por si la necesitamos localmente).
     """
+    
     with open(PUBLIC_KEY_FILE, "rb") as f:
         return serialization.load_pem_public_key(f.read())
 
@@ -66,6 +67,7 @@ def sign_payload(payload_bytes: bytes) -> str:
     Firma el payload con PSS+SHA256 y devuelve
     la firma en base64 (string).
     """
+    
     priv = load_private_key()
     signature = priv.sign(
         payload_bytes,
