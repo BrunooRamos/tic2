@@ -8,14 +8,14 @@ KEY_DIR = os.path.expanduser("~/.raspi_keys")
 PRIVATE_KEY_FILE = os.path.join(KEY_DIR, "private_key.pem")
 PUBLIC_KEY_FILE  = os.path.join(KEY_DIR, "public_key.pem")
 
-def ensure_keys(raspi_id: int):
+def ensure_keys(raspi_id: str):
     
     """
     Si no existen, genera par de claves RSA (2048 bits)
     y las salva en ~/.raspi_keys.
     """
 
-    os.makedirs(KEY_DIR, exist_ok=True)
+    os.makedirs(KEY_DIR, exist_ok = True)
     if not os.path.exists(PRIVATE_KEY_FILE):
         
         # Generar par de claves
