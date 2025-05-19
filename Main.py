@@ -42,8 +42,8 @@ def main():
         publish_data(mensaje)
 
         info = Info(
-            raspberry_id=1,
-            people = people_count,
+            raspberry_id = "rpi-001", # Considerar pasarlo desde una variable de entorno,
+            people = people_count,    # porque se repite también en el archivo Process.py
             humidity = medida["humidity"],
             temperature = medida["temperature"],
             co2 = medida["co2"]

@@ -8,16 +8,17 @@ import json
 import Criptografia
 
 class ProcessToEC2:
-    def __init__(self, raspberry_id=1, api_endpoint="http://18.190.33.134:5000", session=None):
-        self.api_endpoint = f"{api_endpoint}/measurements/{raspberry_id}"
-        self.session = session
+    def __init__(self, raspberry_id = "rpi-001", api_endpoint="http://18.190.33.134:5000", session=None):
+        self.api_endpoint = f"{api_endpoint}/measurements/{raspberry_id}" # Acá hay que decirle a Rodri 
+        self.session = session                                            # que corrija el endpoint
+        self.raspberry_id = raspberry_id                                  # y ponga la nueva id de la raspi
 
         Criptografia.ensure_keys(raspberry_id)
 
     def _build_signed_request(self, data: dict) -> dict:
         
         """
-        Devuelve el body JSON que incluye:
+        Devuelve un JSON que incluye:
          - raspi_id
          - timestamp
          - data
@@ -26,13 +27,13 @@ class ProcessToEC2:
 
         timestamp = datetime.now().isoformat()
         payload = {
-            "raspi_id": 1,
+            "raspi_id": self.raspberry_id,
             "timestamp": timestamp,
             "data": data
         }
 
         # Convertir a bytes siempre de la misma forma
-        payload_bytes = json.dumps(payload, sort_keys=True).encode("utf-8")
+        payload_bytes = json.dumps(payload, sort_keys = True).encode("utf-8")
         
         # Firmar
         sig = Criptografia.sign_payload(payload_bytes)
