@@ -1,7 +1,7 @@
 from Database.Queries import Queries
 from sqlalchemy.orm import Session
 from statistics import mean
-from datetime import datetime
+from datetime import datetime, timezone
 from Database.models.Info import Info
 import requests
 import json
@@ -25,7 +25,7 @@ class ProcessToEC2:
          - signature (base64)
         """
 
-        timestamp = datetime.now().isoformat()
+        timestamp = datetime.now(timezone.utc).isoformat()
         payload = {
             "raspi_id": self.raspberry_id,
             "timestamp": timestamp,

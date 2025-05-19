@@ -8,6 +8,14 @@ KEY_DIR = os.path.expanduser("~/.raspi_keys")
 PRIVATE_KEY_FILE = os.path.join(KEY_DIR, "private_key.pem")
 PUBLIC_KEY_FILE  = os.path.join(KEY_DIR, "public_key.pem")
 
+# ---------------- Importante ----------------
+# 1) Los datos que estamos mandando al IOT Core (la parte del real-time)
+# no los estamos firmando, solo estamos firmando por ahora los datos que
+# mandamos a la API de EC2. Esto hay que verlo después cuando se encare el real-time
+# 2) Implementar algo que evite los replay attacks. Por ahora no lo estamos haciendo y pienso 
+# que sería ir muy al hueso
+# --------------------------------------------
+
 def ensure_keys(raspi_id: str):
     
     """

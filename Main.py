@@ -19,6 +19,8 @@ def main():
     session = Session()
 
     # Inicializar el proceso de EC2
+    # Acá hay que poner para pasar el id del raspberry
+    # para que no sea siempre el id rpi-001 por default
     process_to_ec2 = ProcessToEC2( session=session)
 
     last_process_time = time.time()
