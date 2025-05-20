@@ -13,9 +13,9 @@ class ProcessToEC2:
         self.session = session                                            # que corrija el endpoint
         self.raspberry_id = raspberry_id                                  # y ponga la nueva id de la raspi
 
-        Criptografia.ensure_keys(raspberry_id)
+        Criptografia.crearKeys()
 
-    def _build_signed_request(self, data: dict) -> dict:
+    def firmarRequest(self, data: dict) -> dict:
         
         """
         Devuelve un JSON que incluye:
@@ -36,7 +36,7 @@ class ProcessToEC2:
         payload_bytes = json.dumps(payload, sort_keys = True).encode("utf-8")
         
         # Firmar
-        sig = Criptografia.sign_payload(payload_bytes)
+        sig = Criptografia.firmarPayload(payload_bytes)
 
         # Inyectar la firma
         payload["signature"] = sig
@@ -49,7 +49,7 @@ class ProcessToEC2:
         """
 
         # Construir el payload firmado
-        signed_payload = self._build_signed_request(data)
+        signed_payload = self.firmarRequest(data)
 
         try:
             response = requests.post(self.api_endpoint, json = signed_payload, timeout = 5)
@@ -66,7 +66,7 @@ class ProcessToEC2:
             print(f"Excepción al enviar datos a la API: {e}")
             return False
 
-    def process(self, session: Session):
+    def procesarEntradas(self, session: Session):
         
         """
         Procesa las entradas no procesadas, calcula promedios,

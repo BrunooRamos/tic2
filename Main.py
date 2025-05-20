@@ -55,7 +55,7 @@ def main():
         # Procesar cada 10 segundos
         if time.time() - last_process_time >= 10:
             # Procesar los datos no procesados
-            process_to_ec2.process(session)
+            process_to_ec2.procesarEntradas(session)
             last_process_time = time.time()
 
     session.close()

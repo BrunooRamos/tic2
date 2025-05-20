@@ -16,7 +16,7 @@ PUBLIC_KEY_FILE  = os.path.join(KEY_DIR, "public_key.pem")
 # que sería ir muy al hueso
 # --------------------------------------------
 
-def ensure_keys(raspi_id: str):
+def crearKeys():
     
     """
     Si no existen, genera par de claves RSA (2048 bits)
@@ -42,6 +42,7 @@ def ensure_keys(raspi_id: str):
                     encryption_algorithm = serialization.NoEncryption()
                 )
             )
+
         with open(PUBLIC_KEY_FILE, "wb") as f:  
             f.write(
                 public_key.public_bytes(
@@ -67,7 +68,7 @@ def load_public_key():
     with open(PUBLIC_KEY_FILE, "rb") as f:
         return serialization.load_pem_public_key(f.read())
 
-def sign_payload(payload_bytes: bytes) -> str:
+def firmarPayload(payload_bytes: bytes) -> str:
     """
     Firma el payload con PSS+SHA256 y devuelve
     la firma en base64 (string).
