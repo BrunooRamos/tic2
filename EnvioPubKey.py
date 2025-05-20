@@ -13,7 +13,7 @@ class EnvioClavePublica:
 
         cripto = Criptografia()
 
-        cripto.crearKeys()  # Generar claves si no existen
+        cripto.crearKeys()  # Generar las claves si no existen
         
         # Leer PEM de la clave pública
         public_key_obj = cripto.load_public_key()
@@ -23,7 +23,6 @@ class EnvioClavePublica:
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         ).decode('ascii')  # Convertir bytes a string
         
-
         # Construir payload de registro
         timestamp = datetime.now(timezone.utc).isoformat()
         payload = {
@@ -33,7 +32,7 @@ class EnvioClavePublica:
         }
 
         # Serializar y firmar 
-        payload_bytes = json.dumps(payload, sort_keys=True).encode("utf-8")
+        payload_bytes = json.dumps(payload, sort_keys = True).encode("utf-8")
         signature     = cripto.firmarPayload(payload_bytes)
         payload["signature"] = signature
 
