@@ -5,8 +5,8 @@ import Criptografia
 class EnvioClavePublica:
     def __init__(self, raspberry_id="rpi-001", api_endpoint=..., session=None):
         self.raspberry_id = raspberry_id
-        self.api_base     = api_endpoint.rstrip("/")
-        self.session      = session
+        self.api_base     = api_endpoint.rstrip("/") # Esto hay que configurarlo cuando tengamos
+        self.session      = session                  # el endpoint
 
         # 1) Generar/asegurar claves
         Criptografia.ensure_keys(self.raspberry_id)
