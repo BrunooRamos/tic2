@@ -9,7 +9,7 @@ class EnvioClavePublica:
         self.session      = session                  # el endpoint
 
         # 1) Generar/asegurar claves
-        Criptografia.ensure_keys(self.raspberry_id)
+        Criptografia.crearKeys()
 
         # 2) Registrar public key en el servidor
         self.enviarClave()
