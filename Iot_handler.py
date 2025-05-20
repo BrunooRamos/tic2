@@ -80,7 +80,7 @@ def subscribe_to_topic():
     subscribe_result = subscribe_future.result()
     logging.info(f"Suscripción exitosa con QoS: {subscribe_result['qos']}")
 
-def publish_data(payload):
+def publish_data_iot(payload):
     try:
         mensaje = json.dumps(payload)
         #logging.info(f"Publicando mensaje a tópico '{topic}': {mensaje}")
@@ -107,4 +107,4 @@ if __name__ == '__main__':
     subscribe_to_topic()
 
     # Publicar mensajes de manera continua
-    publish_data()
+    publish_data_iot()

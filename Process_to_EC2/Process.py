@@ -5,13 +5,13 @@ from datetime import datetime, timezone
 from Database.models.Info import Info
 import requests
 import json
-import Criptografia
+from Seguridad import Criptografia
 
 class ProcessToEC2:
-    def __init__(self, raspberry_id = "rpi-001", api_endpoint="http://18.190.33.134:5000", session=None):
-        self.api_endpoint = f"{api_endpoint}/measurements/{raspberry_id}" # Acá hay que decirle a Rodri 
-        self.session = session                                            # que corrija el endpoint
-        self.raspberry_id = raspberry_id                                  # y ponga la nueva id de la raspi
+    def __init__(self, raspberry_id = 1, api_endpoint="http://18.190.33.134:5000", session=None):
+        self.api_endpoint = f"{api_endpoint}/measurements/{raspberry_id}"  
+        self.session = session                                            
+        self.raspberry_id = raspberry_id                                  
 
         Criptografia.crearKeys()
 
