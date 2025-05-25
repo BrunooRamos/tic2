@@ -1,0 +1,29 @@
+[Unit]
+Description=Sistema de Monitoreo
+After=network.target postgresql.service
+Wants=network.target
+Requires=postgresql.service
+
+[Service]
+Type=simple
+User=grupo13
+Group=grupo13
+WorkingDirectory=/home/pi/monitoreo-ambiental
+Environment=PATH=/home/pi/monitoreo-ambiental/venv/bin
+ExecStart=/home/pi/monitoreo-ambiental/venv/bin/python /home/pi/monitoreo-ambiental/main.py
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=monitoreo-ambiental
+
+# Configuración de reinicio
+StartLimitInterval=60s
+StartLimitBurst=3
+
+# Variables de entorno
+EnvironmentFile=/home/pi/monitoreo/.env
+
+[Install]
+WantedBy=multi-user.target 

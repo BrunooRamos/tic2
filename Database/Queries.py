@@ -1,83 +1,185 @@
-from sqlalchemy import select, update, delete
+"""
+Módulo de consultas a la base de datos.
+Este módulo contiene las consultas SQL más comunes utilizadas en el sistema,
+proporcionando una capa de abstracción sobre las operaciones de base de datos.
+"""
+
+from typing import List, Optional
 from sqlalchemy.orm import Session
-from .models.Info import Info   
+from sqlalchemy import desc
+from datetime import datetime, timedelta
+
+from database.models.Info import Info
 
 class Queries:
     """
-    This class contains SQL queries for the database.
+    Clase que encapsula las consultas más comunes a la base de datos.
+    
+    Esta clase proporciona métodos estáticos para realizar operaciones
+    CRUD y consultas específicas sobre la tabla 'info'.
     """
-
-    @staticmethod
-    def get_proccesed_data(session: Session):
-        """
-        SQL query to get processed data from the database.
-        """
-        stmt = (
-            select(Info)
-            .where(Info.processed == True)
-            .order_by(Info.timestamp.desc())
-        )
-
-        return session.execute(stmt).all()
     
     @staticmethod
-    def get_unprocessed_data(session: Session):
+    def insert_data(session: Session, info: Info) -> Info:
         """
-        SQL query to get unprocessed data from the database.
+        Inserta un nuevo registro en la base de datos.
+        
+        Args:
+            session (Session): Sesión de base de datos SQLAlchemy.
+            info (Info): Objeto Info con los datos a insertar.
+            
+        Returns:
+            Info: El registro insertado con su ID asignado.
+            
+        Raises:
+            Exception: Si ocurre un error durante la inserción.
         """
-        stmt = (
-            select(Info)
-            .where(Info.processed == False)
-            .order_by(Info.timestamp.desc())
-        )
-
-        return session.execute(stmt).all()
-        # Esto lo cambié, el que estaba antes es el de abajo, 
-        # hay que probar a ver si funcionaba antes de usar el session.execute
-     
-        #return session.query(Info).filter_by(processed=False).all()
+        try:
+            session.add(info)
+            session.flush()
+            return info
+        except Exception as e:
+            session.rollback()
+            raise Exception(f"Error al insertar datos: {str(e)}")
     
-
     @staticmethod
-    def insert_data(session: Session, data: Info):
+    def get_unprocessed_data(session: Session, limit: int = 100) -> List[Info]:
         """
-        SQL query to insert data into the database.
+        Obtiene registros no procesados ordenados por timestamp.
+        
+        Args:
+            session (Session): Sesión de base de datos SQLAlchemy.
+            limit (int): Número máximo de registros a devolver.
+            
+        Returns:
+            List[Info]: Lista de registros no procesados.
         """
-        session.add(data)
-        session.commit()
-
+        return session.query(Info)\
+            .filter(Info.processed == False)\
+            .order_by(Info.timestamp.asc())\
+            .limit(limit)\
+            .all()
+    
     @staticmethod
-    def delete_data_from_date(session: Session, cutoff_date):
+    def get_latest_data(session: Session, limit: int = 10) -> List[Info]:
         """
-        Elimina todas las filas con processed=False cuyo timestamp
-        sea menor o igual a cutoff_date.
+        Obtiene los registros más recientes.
+        
+        Args:
+            session (Session): Sesión de base de datos SQLAlchemy.
+            limit (int): Número máximo de registros a devolver.
+            
+        Returns:
+            List[Info]: Lista de registros ordenados por timestamp descendente.
         """
-        stmt = (
-            delete(Info)
-            .where(
-                (Info.processed == False),
-
-                # Acá agregue esta condición que antes no se estaba
-                # considerando, porque sino se iban a eliminar todos los datos
-                # que no estaban procesados, y no solo los que eran
-                # anteriores a la fecha de corte
-                (Info.timestamp <= cutoff_date)
-            )
-        )
-        ejecucion = session.execute(stmt)
-        session.commit()
-        return ejecucion.rowcount  # Devuelve la cantidad de filas que eliminamos
-
-
+        return session.query(Info)\
+            .order_by(desc(Info.timestamp))\
+            .limit(limit)\
+            .all()
+    
     @staticmethod
-    def mark_as_processed(session: Session, data: Info):
+    def get_data_by_date_range(
+        session: Session,
+        start_date: datetime,
+        end_date: datetime
+    ) -> List[Info]:
         """
-        SQL query to mark data as processed.
+        Obtiene registros dentro de un rango de fechas.
+        
+        Args:
+            session (Session): Sesión de base de datos SQLAlchemy.
+            start_date (datetime): Fecha de inicio del rango.
+            end_date (datetime): Fecha de fin del rango.
+            
+        Returns:
+            List[Info]: Lista de registros dentro del rango especificado.
         """
-        stmt = (
-            update(Info)
-            .where(Info.id == data.id)
-            .values(processed=True)
-        )
-        session.execute(stmt)
+        return session.query(Info)\
+            .filter(Info.timestamp.between(start_date, end_date))\
+            .order_by(Info.timestamp.asc())\
+            .all()
+    
+    @staticmethod
+    def get_data_by_raspberry_id(
+        session: Session,
+        raspberry_id: int,
+        limit: int = 100
+    ) -> List[Info]:
+        """
+        Obtiene registros de un Raspberry Pi específico.
+        
+        Args:
+            session (Session): Sesión de base de datos SQLAlchemy.
+            raspberry_id (int): ID del Raspberry Pi.
+            limit (int): Número máximo de registros a devolver.
+            
+        Returns:
+            List[Info]: Lista de registros del Raspberry Pi especificado.
+        """
+        return session.query(Info)\
+            .filter(Info.raspberry_id == raspberry_id)\
+            .order_by(desc(Info.timestamp))\
+            .limit(limit)\
+            .all()
+    
+    @staticmethod
+    def get_average_metrics(
+        session: Session,
+        hours: int = 24
+    ) -> dict:
+        """
+        Calcula las métricas promedio para un período de tiempo.
+        
+        Args:
+            session (Session): Sesión de base de datos SQLAlchemy.
+            hours (int): Número de horas hacia atrás para calcular promedios.
+            
+        Returns:
+            dict: Diccionario con las métricas promedio calculadas.
+        """
+        start_time = datetime.utcnow() - timedelta(hours=hours)
+        
+        result = session.query(
+            Info.raspberry_id,
+            Info.temperature,
+            Info.humidity,
+            Info.co2,
+            Info.people
+        ).filter(
+            Info.timestamp >= start_time
+        ).all()
+        
+        if not result:
+            return {
+                'temperature': 0,
+                'humidity': 0,
+                'co2': 0,
+                'people': 0
+            }
+        
+        total_records = len(result)
+        return {
+            'temperature': sum(r.temperature for r in result) / total_records,
+            'humidity': sum(r.humidity for r in result) / total_records,
+            'co2': sum(r.co2 for r in result) / total_records,
+            'people': sum(r.people for r in result) / total_records
+        }
+    
+    @staticmethod
+    def delete_old_data(session: Session, days: int = 30) -> int:
+        """
+        Elimina registros más antiguos que el número de días especificado.
+        
+        Args:
+            session (Session): Sesión de base de datos SQLAlchemy.
+            days (int): Número de días a mantener en la base de datos.
+            
+        Returns:
+            int: Número de registros eliminados.
+        """
+        cutoff_date = datetime.utcnow() - timedelta(days=days)
+        result = session.query(Info)\
+            .filter(Info.timestamp < cutoff_date)\
+            .delete()
         session.commit()
+        return result
