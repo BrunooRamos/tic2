@@ -1,0 +1,17 @@
+sqlalchemy
+dotenv
+requests
+cv2
+opencv-python
+ultralytics
+awscrt
+awsiotsdk
+Adafruit-blinka
+adafruit-circuitpython-dht
+lgpio
+
+paho-mqtt>=1.6.1
+psycopg2-binary>=2.9.9
+sensirion-i2c-driver>=0.1.2
+sensirion-i2c-scd>=0.1.2
+smbus2>=0.4.2 
