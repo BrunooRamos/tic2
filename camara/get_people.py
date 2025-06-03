@@ -1,6 +1,6 @@
 from ultralytics import YOLO
 import cv2
-from Camara.Count_people import count_people
+from camara.count_people import count_people
 
 def get_people_data():
     model = YOLO("yolov8n.pt")

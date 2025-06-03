@@ -1,0 +1,27 @@
+# Requisitos del sistema de monitoreo ambiental
+# Versiones específicas para garantizar compatibilidad
+
+# Base de datos
+sqlalchemy==2.0.23  # ORM para Python
+psycopg2-binary==2.9.9  # Driver PostgreSQL
+
+# Utilidades
+python-dotenv==1.0.0  # Manejo de variables de entorno
+requests==2.31.0  # Cliente HTTP
+
+# Sensores y hardware
+opencv-python  # Procesamiento de imágenes
+ultralytics  # YOLOv8 para detección de personas
+paho-mqtt>=1.6.1  # Cliente MQTT
+sensirion-i2c-driver>=0.1.2  # Driver para sensores Sensirion
+sensirion-i2c-scd>=0.1.2  # Driver específico para SCD30
+smbus2>=0.4.2  # Interfaz I2C
+Adafruit-blinka  # Soporte para hardware
+adafruit-circuitpython-dht  # Driver para sensor DHT
+
+# AWS IoT
+awscrt  # AWS Common Runtime
+awsiotsdk  # AWS IoT Device SDK
+
+# Logging
+logging==0.4.9.6  # Sistema de logging

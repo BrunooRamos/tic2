@@ -15,10 +15,9 @@ PUBLIC_KEY_FILE  = os.path.join(KEY_DIR, "public_key.pem")
 # que sería ir muy al hueso
 # --------------------------------------------
 
-class Criptografia:
+class Cripto:
     def __init__(self):
         pass
-        
 
     def crearKeys(self):    
         """
